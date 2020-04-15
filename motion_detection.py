@@ -39,12 +39,21 @@ while True:
         cam.capture(data_cur,'rgb')
 
         # compare to previous image and apply t-test
-        diff = data_cur - data_prev
+        
+        pmu = data_prev.mean()
+        cmu = data_prev.mean()
+        pstd = (data_prev-pmu)**2/(len(data_prev)-1)
+        cstd = (data_cur-pmu)**2/(len(data_cur)-1)
+        
+        norm_prev = (data_prev - pmu)/pstd
+        norm_cur = (data_cur - cmu)/cstd
+        
+        diff = norm_cur - norm_prev
         diff = diff.flatten()
         pvalue = ttest_one_sample(diff)
 
         # if the image is significantly different than the last, save it
-        if pvalue < .05:
+        if pvalue < .001:
             # save to file named as current time
             file_name = time.asctime( time.localtime(time.time()) )
             file_name = str.split(file_name)[3].replace(':',"")
@@ -54,8 +63,9 @@ while True:
         data_prev = data_cur
         data_cur = np.empty((cam_res[0],cam_res[1],3),dtype=np.uint8)
         
+        ite +=1
         
-        print(diff)
+        print([ite,pvalue,type(pvalue)])
         
 
     except KeyboardInterrupt:
