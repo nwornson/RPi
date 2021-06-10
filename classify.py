@@ -10,7 +10,7 @@ h=224
 l=224
 
 # our test image
-im_path = 'test_cropped.jpg'
+im_path = 'test.jpg'
 
 # process the image
 imData = proc_image(im_path,l,h)
