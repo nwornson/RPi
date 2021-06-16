@@ -2,6 +2,8 @@ from picamera import PiCamera
 import imageio
 import time
 import numpy as np
+from gps import *
+import time
 
 def capture(h):
 
@@ -26,5 +28,18 @@ def capture(h):
     imageio.imwrite(file_name + '.png', img)
 
     return img
+
+
+
+def gps():
+
+
+    nx = gpsd.next()
+    # For a list of all supported classes and fields refer to:
+    # https://gpsd.gitlab.io/gpsd/gpsd_json.html
+    if nx['class'] == 'TPV':
+        latitude = getattr(nx,'lat', "Unknown")
+        longitude = getattr(nx,'lon', "Unknown")
+        print "Your position: lon = " + str(longitude) + ", lat = " + str(latitude)
 
 
